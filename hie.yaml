@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "upenn-cis194:lib"
+
+    - path: "./app/Main.hs"
+      component: "upenn-cis194:exe:upenn-cis194-exe"
+
+    - path: "./app/Paths_upenn_cis194.hs"
+      component: "upenn-cis194:exe:upenn-cis194-exe"
+
+    - path: "./test"
+      component: "upenn-cis194:test:upenn-cis194-test"
