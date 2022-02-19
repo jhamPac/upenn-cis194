@@ -1,6 +1,9 @@
 module Main where
 
-import Lib
+import           CodeWorld
+
+screen :: Picture
+screen = solidCircle 1
 
 main :: IO ()
-main = someFunc
+main = drawingOf screen
