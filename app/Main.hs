@@ -2,8 +2,8 @@ module Main where
 
 import           CodeWorld
 
-greenCircle :: Picture
-greenCircle = colored green $ solidCircle 1
+circles :: Picture
+circles = colored green (solidCircle 1) & solidCircle 2
 
 main :: IO ()
-main = drawingOf greenCircle
+main = drawingOf circles
