@@ -2,15 +2,12 @@ module Main where
 
 import           CodeWorld
 
-greenLight :: Picture
-greenLight = colored green (translated 0 (-1.5) (solidCircle 1))
-
-redLight :: Picture
-redLight = colored red (translated 0 (1.5) (solidCircle 1))
+trafficCircle c p = colored c (translated 0 p (solidCircle 1))
 
 frame = rectangle 2.5 5.5
 
-trafficLight = greenLight & redLight & frame
+trafficLight True = (trafficCircle green (-1.5)) & (trafficCircle black 1.5) & frame
+trafficLight False = (trafficCircle black (-1.5)) & (trafficCircle red 1.5) & frame
 
 main :: IO ()
-main = drawingOf trafficLight
+main = drawingOf $ trafficLight False
