@@ -2,8 +2,8 @@ module Main where
 
 import           CodeWorld
 
-screen :: Picture
-screen = solidCircle 1
+greenCircle :: Picture
+greenCircle = colored green $ solidCircle 1
 
 main :: IO ()
-main = drawingOf screen
+main = drawingOf greenCircle
