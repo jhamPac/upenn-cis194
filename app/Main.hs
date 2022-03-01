@@ -6,4 +6,4 @@ import           Maze
 import           Traffic
 
 main :: IO ()
-main = drawingOf (atCoord exampleCoord pictureOfMaze)
+main = interactionOf initialCoord handleTime handleEvent drawState
