@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Maze
       Traffic
   other-modules:
       Paths_upenn_cis194
