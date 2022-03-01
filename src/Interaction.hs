@@ -1,6 +1,7 @@
 module Interaction where
 
 import           CodeWorld
+import           Maze
 
 data Direction
     = R
@@ -24,3 +25,17 @@ adjacentCoord D (C x y) = C x (y-1)
 
 exampleCoord :: Coord
 exampleCoord = adjacentCoord U (adjacentCoord U (adjacentCoord L initialCoord))
+
+handleTime :: Double -> Coord -> Coord
+handleTime _ c = c
+
+handleEvent :: Event -> Coord -> Coord
+handleEvent (KeyPress key) c
+    | key == "Right" = adjacentCoord R c
+    | key == "Up" = adjacentCoord U c
+    | key == "Left" = adjacentCoord L c
+    | key == "Down" = adjacentCoord D c
+handleEvent _ c = c
+
+drawState :: Coord -> Picture
+drawState c = atCoord c pictureOfMaze
