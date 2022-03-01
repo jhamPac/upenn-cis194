@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Interaction
       Maze
       Traffic
   other-modules:
