@@ -1,8 +1,9 @@
 module Main where
 
 import           CodeWorld
+import           Interaction
 import           Maze
 import           Traffic
 
 main :: IO ()
-main = drawingOf pictureOfMaze
+main = drawingOf (atCoord exampleCoord pictureOfMaze)

@@ -1,5 +1,7 @@
 module Interaction where
 
+import           CodeWorld
+
 data Direction
     = R
     | U
