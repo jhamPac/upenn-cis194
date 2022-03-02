@@ -45,14 +45,14 @@ data GameState world = StartScreen | Running world
 startScreen :: Picture
 startScreen = scaled 3 3 (text "Loading...")
 
-startScreenInteractionOf ::
-    world ->
-    (Double -> world -> world) ->
-    (Event -> world -> world) ->
-    (world -> Picture) ->
-    IO ()
+data Interaction world = Interaction
+    world
+    (Double -> world -> world)
+    (Event -> world -> world)
+    (world -> Picture)
 
-startScreenInteractionOf state step handle draw = interactionOf state' step' handle' draw'
+withStartScreen :: Interaction s -> Interaction (GameState s)
+withStartScreen (Interaction state step handle draw) = Interaction state' step' handle' draw'
     where
         state' = StartScreen
         step' _ StartScreen = StartScreen
@@ -64,3 +64,15 @@ startScreenInteractionOf state step handle draw = interactionOf state' step' han
 
         draw' StartScreen = startScreen
         draw' (Running s) = draw s
+
+resetable :: Interaction s -> Interaction s
+resetable (Interaction state step handle draw) =
+    Interaction state step handle' draw
+    where
+        handle' (KeyPress key) _ | key == "Esc" = state
+        handle' e s = handle e s
+
+runInteraction :: Interaction s -> IO ()
+runInteraction (Interaction state step handle draw) =
+    interactionOf state step handle draw
+
