@@ -39,3 +39,8 @@ handleEvent _ c = c
 
 drawState :: Coord -> Picture
 drawState c = atCoord c pictureOfMaze
+
+data GameState = StartScreen | Running world
+
+startScreen :: Picture
+startScreen = scaled 3 3 (text "Loading...")
