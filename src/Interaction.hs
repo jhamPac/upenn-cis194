@@ -40,7 +40,27 @@ handleEvent _ c = c
 drawState :: Coord -> Picture
 drawState c = atCoord c pictureOfMaze
 
-data GameState = StartScreen | Running world
+data GameState world = StartScreen | Running world
 
 startScreen :: Picture
 startScreen = scaled 3 3 (text "Loading...")
+
+startScreenInteractionOf ::
+    world ->
+    (Double -> world -> world) ->
+    (Event -> world -> world) ->
+    (world -> Picture) ->
+    IO ()
+
+startScreenInteractionOf state step handle draw = interactionOf state' step' handle' draw'
+    where
+        state' = StartScreen
+        step' _ StartScreen = StartScreen
+        step' t (Running s) = Running (step t s)
+
+        handle' (KeyPress key) StartScreen | key == " " = Running state
+        handle' _ StartScreen = StartScreen
+        handle' e (Running s) = Running (handle e s)
+
+        draw' StartScreen = startScreen
+        draw' (Running s) = draw s

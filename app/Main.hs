@@ -6,4 +6,4 @@ import           Maze
 import           Traffic
 
 main :: IO ()
-main = interactionOf initialCoord handleTime handleEvent drawState
+main = startScreenInteractionOf initialCoord handleTime handleEvent drawState
