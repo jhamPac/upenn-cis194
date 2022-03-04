@@ -40,8 +40,6 @@ handleEvent _ c = c
 drawState :: Coord -> Picture
 drawState c = atCoord c pictureOfMaze
 
-data GameState world = StartScreen | Running world
-
 startScreen :: Picture
 startScreen = scaled 3 3 (text "Loading...")
 
@@ -50,6 +48,10 @@ data Interaction world = Interaction
     (Double -> world -> world)
     (Event -> world -> world)
     (world -> Picture)
+
+-- GameState
+
+data GameState world = StartScreen | Running world
 
 withStartScreen :: Interaction s -> Interaction (GameState s)
 withStartScreen (Interaction state step handle draw) = Interaction state' step' handle' draw'
@@ -65,22 +67,12 @@ withStartScreen (Interaction state step handle draw) = Interaction state' step' 
         draw' StartScreen = startScreen
         draw' (Running s) = draw s
 
-resetable :: Interaction s -> Interaction s
-resetable (Interaction state step handle draw) =
-    Interaction state step handle' draw
-    where
-        handle' (KeyPress key) _ | key == "Esc" = state
-        handle' e s = handle e s
-
-runInteraction :: Interaction s -> IO ()
-runInteraction (Interaction state step handle draw) =
-    interactionOf state step handle draw
+-- WithUndo feature
 
 data WithUndo a = WithUndo a [a]
 
 withUndo :: Eq a => Interaction a -> Interaction (WithUndo a)
-withUndo (Interaction state step handle draw) =
-    Interaction state' step' handle' draw'
+withUndo (Interaction state step handle draw) = Interaction state' step' handle' draw'
     where
         state' = WithUndo state []
 
@@ -100,3 +92,16 @@ withUndo (Interaction state step handle draw) =
 
         draw' (WithUndo s _) = draw s
 
+-- Reset game
+
+resetable :: Interaction s -> Interaction s
+resetable (Interaction state step handle draw) = Interaction state step handle' draw
+    where
+        handle' (KeyPress key) _ | key == "Esc" = state
+        handle' e s = handle e s
+
+-- interactionOf wrapper that takes a Interaction s data type
+
+runInteraction :: Interaction s -> IO ()
+runInteraction (Interaction state step handle draw) =
+    interactionOf state step handle draw
