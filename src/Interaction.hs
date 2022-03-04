@@ -9,7 +9,7 @@ data Direction
     | L
     | D
 
-data Coord = C Integer Integer
+data Coord = C Integer Integer deriving Eq
 
 initialCoord :: Coord
 initialCoord = C 0 0
