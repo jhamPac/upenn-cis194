@@ -76,3 +76,27 @@ runInteraction :: Interaction s -> IO ()
 runInteraction (Interaction state step handle draw) =
     interactionOf state step handle draw
 
+data WithUndo a = WithUndo a [a]
+
+withUndo :: Eq a => Interaction a -> Interaction (WithUndo a)
+withUndo (Interaction state step handle draw) =
+    Interaction state' step' handle' draw'
+    where
+        state' = WithUndo state []
+
+        step' t (WithUndo s stack) = WithUndo (step t s) stack
+
+        handle' (KeyPress key) (WithUndo s stack)
+            | key == "U" = case stack of
+                                (x:xs) -> WithUndo x xs
+                                []     -> WithUndo s []
+
+        handle' e (WithUndo s stack)
+            | s' == s = WithUndo s stack
+            | otherwise = WithUndo s' (s:stack)
+
+             where
+                s' = handle e s
+
+        draw' (WithUndo s _) = draw s
+

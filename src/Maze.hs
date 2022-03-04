@@ -15,6 +15,7 @@ data Tile
     | Storage
     | Box
     | Blank
+    deriving Eq
 
 drawTile :: Tile -> Picture
 drawTile Wall    = wall
