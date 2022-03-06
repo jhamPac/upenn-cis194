@@ -27,6 +27,7 @@ library
   exposed-modules:
       Interaction
       Maze
+      Parser
       Traffic
   other-modules:
       Paths_upenn_cis194
