@@ -42,3 +42,43 @@ instance Monad Parser where
     p1 >>= k = P $ \input -> do
         (x, r1) <- runParser p1 input
         runParser (k x) r1
+
+anyCharP :: Parser Char
+anyCharP = P $ \input -> case input of
+    (c:cs) -> Just (c, rest)
+    []     -> Nothing
+
+charP :: Char -> Parser ()
+charP c = do
+    c' <- anyCharP
+    if c == c'
+        then return ()
+        else noParserP
+
+anyCharButP :: Char -> Parser Char
+anyCharButP c = do
+    c' <- anyCharP
+    if c /= c'
+        then return c'
+        else noParserP
+
+letterOrDigitP :: Parser Char
+letterOrDigitP = do
+    c <- anyCharButP
+    if isAlphaNum
+        then return c
+        else noParserP
+
+orElseP :: Parser a -> Parser a -> Parser a
+orElseP p1 p2 = P $ \input -> case runParser p1 input of
+    Just r  -> Just r
+    Nothing -> runParser p2 input
+
+manyP :: Parser a -> Parser [a]
+manyP p = (pure (:) <*> p <*> manyP p) `orElseP` pure []
+
+many1P :: Parser a -> Parser [a]
+many1P p = pure (:) <*> p <*> manyP p
+
+sepByP :: Parser a -> Parser () -> Parser [a]
+sepByP p1 p2 = ((:) <$> p1 <*> (manyP (p2 *> p1))) `orElseP` pure []
